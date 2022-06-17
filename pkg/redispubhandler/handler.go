@@ -1,18 +1,15 @@
 package redispubhandler
 
 import (
-	"encoding/json"
-
 	"gopkg.in/redis.v5"
 )
 
 type Context struct {
 	Error   error
-	Message interface{}
+	Message string
 }
 
 type Request interface {
-	GetInterface() interface{}
 	Response(*Context)
 }
 
@@ -29,13 +26,8 @@ func Handle(r *redis.Client, sub string, req Request) error {
 					Error: err,
 				})
 			}
-			in := req.GetInterface()
-			if err := json.Unmarshal([]byte(msg.Payload), &in); err != nil {
-				req.Response(&Context{
-					Error: err,
-				})
-			}
-			req.Response(&Context{Message: in})
+
+			req.Response(&Context{Message: msg.Payload})
 		}
 	}()
 	return nil

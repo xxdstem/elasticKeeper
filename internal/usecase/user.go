@@ -1,26 +1,15 @@
 package usecase
 
-import (
-	"keeper/pkg/redispubhandler"
-	"log"
-)
+import "keeper/internal/entity"
 
-type test struct {
-	_interface struct {
-		Message string `json:"message"`
-	}
+type userUseCase struct {
+	repo UserRepository
 }
 
-func New() *test {
-	return &test{}
+func New(repo UserRepository) UserRepository {
+	return &userUseCase{repo: repo}
 }
 
-func (b *test) Response(r *redispubhandler.Context) {
-	log.Println(r.Error)
-	log.Println(r.Message)
-
-}
-func (b *test) GetInterface() interface{} {
-	return &b._interface
-
+func (u *userUseCase) GetUsers(name string) ([]entity.User, error) {
+	return u.repo.GetUsers(name)
 }

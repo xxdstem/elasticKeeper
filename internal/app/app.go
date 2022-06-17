@@ -3,9 +3,12 @@ package app
 import (
 	"fmt"
 	"keeper/config"
-	"log"
-
 	redisHandler "keeper/internal/controller/redis"
+	repo "keeper/internal/repository/user"
+	"keeper/internal/usecase"
+	"log"
+	"sync"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -13,7 +16,10 @@ import (
 	"gopkg.in/redis.v5"
 )
 
+var wg *sync.WaitGroup
+
 func Run(conf *config.Config) {
+	wg = &sync.WaitGroup{}
 	client := meilisearch.NewClient(meilisearch.ClientConfig{
 		Host:   fmt.Sprintf("http://%s", conf.Host),
 		APIKey: conf.APIKey,
@@ -28,7 +34,12 @@ func Run(conf *config.Config) {
 		Addr:     conf.RedisAddr,
 		Password: conf.RedisPassword,
 	})
-	redisHandler.NewRouter(r)
+
+	usersUseCase := usecase.New(
+		repo.New(db),
+	)
+
+	redisHandler.NewRouter(r, usersUseCase)
 
 	// An index is where the documents are stored.
 	index := client.Index("beatmaps_full")
@@ -42,5 +53,12 @@ func Run(conf *config.Config) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	wg.Add(1)
+	go func() {
+		for {
+			time.Sleep(1 * time.Second)
+		}
+	}()
+	wg.Wait()
 
 }
