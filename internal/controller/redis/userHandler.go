@@ -15,7 +15,7 @@ type result struct {
 	User string `json:"user"`
 }
 
-func New(t usecase.UserRepository) *handler {
+func NewUserHandler(t usecase.UserRepository) *handler {
 	return &handler{
 		t: t,
 	}
