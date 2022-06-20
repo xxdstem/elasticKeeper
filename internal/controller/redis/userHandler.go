@@ -12,7 +12,8 @@ type handler struct {
 }
 
 type result struct {
-	User string `json:"user"`
+	User   string `json:"user"`
+	UserID int    `json:"user_id"`
 }
 
 func New(t usecase.UserRepository) *handler {
@@ -32,10 +33,18 @@ func (b *handler) Response(r *redispubhandler.Context) {
 		log.Println(err)
 		return
 	}
-	users, err := b.t.GetUsers(res.User)
-	log.Println(users)
-	if err != nil {
-		log.Println(err)
+	if res.UserID != 0 {
+		u, err := b.t.GetUserByID(res.UserID)
+		log.Println(u)
+		if err != nil {
+			log.Println(err)
+		}
+	} else {
+		users, err := b.t.GetUsers(res.User)
+		log.Println(users)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 
 }

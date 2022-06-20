@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"keeper/config"
 	redisHandler "keeper/internal/controller/redis"
-	repo "keeper/internal/repository/user"
+	"keeper/internal/repository/user_db"
+	"keeper/internal/repository/user_meili"
+
 	"keeper/internal/usecase"
 	"log"
 	"sync"
@@ -36,9 +38,9 @@ func Run(conf *config.Config) {
 	})
 
 	usersUseCase := usecase.New(
-		repo.New(db),
+		user_db.New(db),
+		user_meili.New(client),
 	)
-
 	redisHandler.NewRouter(r, usersUseCase)
 
 	// An index is where the documents are stored.
