@@ -9,6 +9,13 @@ type UserRepository interface {
 	GetUserByID(id int) (*entity.User, error)
 }
 
+type UserMeiliRepository interface {
+	UpdateUser(*entity.User) error
+}
+
+type BeatmapMeiliRepository interface {
+	UpdateBeatmap(*entity.BeatmapSet) error
+}
 type BeatmapRepository interface {
 	GetBeatmapByID(id int) (*entity.BeatmapSet, error)
 }

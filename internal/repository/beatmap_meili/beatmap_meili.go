@@ -1,10 +1,9 @@
-package user_meili
+package beatmap_meili
 
 import (
 	"keeper/internal/entity"
 	rep "keeper/internal/repository"
 
-	"github.com/fatih/structs"
 	"github.com/meilisearch/meilisearch-go"
 )
 
@@ -12,13 +11,15 @@ type repository struct {
 	meili *meilisearch.Client
 }
 
-func New(meili *meilisearch.Client) rep.UserMeiliRepository {
+func New(meili *meilisearch.Client) rep.BeatmapMeiliRepository {
 	return &repository{meili: meili}
 }
 
-func (r *repository) UpdateUser(u *entity.User) error {
-	index := r.meili.Index("users")
-	data := structs.Map(u)
+func (r *repository) UpdateBeatmap(u *entity.BeatmapSet) error {
+	index := r.meili.Index("beatmaps_full")
+	data := []map[string]interface{}{
+		{},
+	}
 	_, err := index.UpdateDocuments(data)
 	return err
 }

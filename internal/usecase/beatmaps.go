@@ -2,12 +2,12 @@ package usecase
 
 import "log"
 
-func NewUserUseCase(db UserRepository, meili UserMeiliRepository) UserUseCase {
+func NewBeatmapsUseCase(db UserRepository, meili UserMeiliRepository) BeatmapsUseCase {
 	return &_useCase{db: db, meili: meili}
 }
 
-func (u *_useCase) UpdateUser(id int) error {
-	log.Println("requested updating user", id)
+func (u *_useCase) UpdateBeatmapSet(id int) error {
+	log.Println("requested updating beatmap", id)
 	user, err := u.db.GetUserByID(id)
 	if err != nil {
 		log.Println(err)

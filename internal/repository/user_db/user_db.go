@@ -30,11 +30,8 @@ func (r *repository) GetUsers(name string) ([]entity.User, error) {
 }
 
 func (r *repository) GetUserByID(id int) (*entity.User, error) {
-	rows, err := r.db.Queryx("SELECT id, users.username, country, privileges, beta_key, email, username_aka FROM users LEFT JOIN users_stats USING (id) WHERE users.id = ?", id)
-	if err != nil {
-		return nil, err
-	}
+	row := r.db.QueryRowx("SELECT id, users.username, country, privileges, beta_key, email, username_aka FROM users LEFT JOIN users_stats USING (id) WHERE users.id = ?", id)
 	result := entity.User{}
-	rows.StructScan(&result)
+	row.StructScan(&result)
 	return &result, nil
 }

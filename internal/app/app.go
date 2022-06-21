@@ -37,7 +37,11 @@ func Run(conf *config.Config) {
 		Password: conf.RedisPassword,
 	})
 
-	usersUseCase := usecase.New(
+	usersUseCase := usecase.NewUserUseCase(
+		user_db.New(db),
+		user_meili.New(client),
+	)
+	beatmapsUseCase := usecase.NewUserUseCase(
 		user_db.New(db),
 		user_meili.New(client),
 	)
