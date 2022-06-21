@@ -7,7 +7,7 @@ type BeatmapSet struct {
 	Title          string
 	Creator        string
 	PlayCount      int
-	PassCoutn      int
+	PassCount      int
 	Ranked         int8
 	RankFreezed    int8 `json:"ranked_status_freezed"`
 	RankDate       int  `json:"ranking_data"`
