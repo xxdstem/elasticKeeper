@@ -3,10 +3,10 @@ package usecase
 import "log"
 
 func NewUserUseCase(db UserRepository, meili UserMeiliRepository) UserUseCase {
-	return &_useCase{db: db, meili: meili}
+	return &_userUseCase{db: db, meili: meili}
 }
 
-func (u *_useCase) UpdateUser(id int) error {
+func (u *_userUseCase) UpdateUser(id int) error {
 	log.Println("requested updating user", id)
 	user, err := u.db.GetUserByID(id)
 	if err != nil {

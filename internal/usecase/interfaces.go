@@ -2,9 +2,13 @@ package usecase
 
 import "keeper/internal/entity"
 
-type _useCase struct {
+type _userUseCase struct {
 	db    UserRepository
 	meili UserMeiliRepository
+}
+type _beatmapUseCase struct {
+	db    BeatmapRepository
+	meili BeatmapMeiliRepository
 }
 
 type BeatmapsUseCase interface {
@@ -21,4 +25,12 @@ type UserRepository interface {
 
 type UserMeiliRepository interface {
 	UpdateUser(*entity.User) error
+}
+
+type BeatmapRepository interface {
+	GetBeatmapByID(id int) (*entity.BeatmapSet, error)
+}
+
+type BeatmapMeiliRepository interface {
+	UpdateBeatmap(*entity.BeatmapSet) error
 }

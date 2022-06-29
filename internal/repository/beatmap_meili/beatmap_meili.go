@@ -1,6 +1,7 @@
 package beatmap_meili
 
 import (
+	"encoding/json"
 	"keeper/internal/entity"
 	rep "keeper/internal/repository"
 
@@ -17,9 +18,9 @@ func New(meili *meilisearch.Client) rep.BeatmapMeiliRepository {
 
 func (r *repository) UpdateBeatmap(u *entity.BeatmapSet) error {
 	index := r.meili.Index("beatmaps_full")
-	data := []map[string]interface{}{
-		{},
-	}
+	var data map[string]interface{}
+	json_data, _ := json.Marshal(u)
+	json.Unmarshal(json_data, &data)
 	_, err := index.UpdateDocuments(data)
 	return err
 }

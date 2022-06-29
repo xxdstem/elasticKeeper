@@ -2,21 +2,16 @@ package usecase
 
 import "log"
 
-func NewBeatmapsUseCase(db UserRepository, meili UserMeiliRepository) BeatmapsUseCase {
-	return &_useCase{db: db, meili: meili}
+func NewBeatmapsUseCase(db BeatmapRepository, meili BeatmapMeiliRepository) BeatmapsUseCase {
+	return &_beatmapUseCase{db: db, meili: meili}
 }
 
-func (u *_useCase) UpdateBeatmapSet(id int) error {
-	log.Println("requested updating beatmap", id)
-	user, err := u.db.GetUserByID(id)
+func (u *_beatmapUseCase) UpdateBeatmapSet(id int) error {
+	log.Println("requested updating beatmapset ", id)
+	b, err := u.db.GetBeatmapByID(id)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
-	err = u.meili.UpdateUser(user)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
+	u.meili.UpdateBeatmap(b)
 	return nil
 }

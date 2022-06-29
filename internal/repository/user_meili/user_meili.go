@@ -1,10 +1,10 @@
 package user_meili
 
 import (
+	"encoding/json"
 	"keeper/internal/entity"
 	rep "keeper/internal/repository"
 
-	"github.com/fatih/structs"
 	"github.com/meilisearch/meilisearch-go"
 )
 
@@ -18,7 +18,9 @@ func New(meili *meilisearch.Client) rep.UserMeiliRepository {
 
 func (r *repository) UpdateUser(u *entity.User) error {
 	index := r.meili.Index("users")
-	data := structs.Map(u)
+	var data map[string]interface{}
+	json_data, _ := json.Marshal(u)
+	json.Unmarshal(json_data, &data)
 	_, err := index.UpdateDocuments(data)
 	return err
 }

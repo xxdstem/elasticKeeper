@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"keeper/config"
 	redisHandler "keeper/internal/controller/redis"
+	"keeper/internal/repository/beatmap_db"
+	"keeper/internal/repository/beatmap_meili"
 	"keeper/internal/repository/user_db"
 	"keeper/internal/repository/user_meili"
 
@@ -31,6 +33,8 @@ func Run(conf *config.Config) {
 		log.Fatalf("couldn't start MySQL connection: %v.", err)
 		return
 	}
+	rs := db.QueryRow("SELECT * FROM users WHERE id = 999")
+	log.Println(rs)
 	defer db.Close()
 	r := redis.NewClient(&redis.Options{
 		Addr:     conf.RedisAddr,
@@ -41,11 +45,11 @@ func Run(conf *config.Config) {
 		user_db.New(db),
 		user_meili.New(client),
 	)
-	beatmapsUseCase := usecase.NewUserUseCase(
-		user_db.New(db),
-		user_meili.New(client),
+	beatmapsUseCase := usecase.NewBeatmapsUseCase(
+		beatmap_db.New(db),
+		beatmap_meili.New(client),
 	)
-	redisHandler.NewRouter(r, usersUseCase)
+	redisHandler.NewRouter(r, usersUseCase, beatmapsUseCase)
 
 	// An index is where the documents are stored.
 	index := client.Index("beatmaps_full")
